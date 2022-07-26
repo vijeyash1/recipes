@@ -1,0 +1,137 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample recipes API. You can find out more about the API at https://github.com/vijeyash1/recipes",
+    "title": "Recipes API",
+    "contact": {
+      "name": "Vijeyash",
+      "url": "http://vijeyash.com +918489635967",
+      "email": "avijeyash@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "host": "localhost:9000",
+  "basePath": "/",
+  "paths": {
+    "/recipes": {
+      "get": {
+        "description": "Returns a list of recipes",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "ListRecipes",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new recipe",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "NewRecipe",
+        "responses": {
+          "200": {
+            "description": "returns the created recipe"
+          },
+          "400": {
+            "description": "invalid request"
+          }
+        }
+      }
+    },
+    "/recipes/search": {
+      "get": {
+        "description": "Searches recipes",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "SearchRecipes",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "query to search",
+            "name": "query",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the searched recipes"
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "put": {
+        "description": "Updates a recipe",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "UpdateRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "id of the recipe",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the updated recipe"
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a recipe",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "DeleteRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "id of the recipe",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns the deleted recipe"
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      }
+    }
+  }
+}

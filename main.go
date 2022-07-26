@@ -17,6 +17,7 @@
 package main
 
 import (
+
 	"context"
 	"log"
 	"net/http"
@@ -64,7 +65,7 @@ func init() {
 	collection := client.Database("recipes").Collection("recipes")
 	app = &application{collection: collection}
 	log.Println("Connected to MongoDB")
-}
+
 
 func main() {
 	router := gin.Default()

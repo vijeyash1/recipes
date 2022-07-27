@@ -77,3 +77,8 @@ database name : local
 
 
  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpamV5YXNoIiwiZXhwIjoxNjU4OTIxODAyfQ.lV3uKrT_Qi5ZiuMZQH5GfhdS3ArGp3v4nXJt2vzVTY0",
+
+
+ session management:
+
+ go get github.com/gin-contrib/sessions

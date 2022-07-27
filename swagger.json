@@ -54,7 +54,7 @@
         }
       }
     },
-    "/recipes/search": {
+    "/recipes/{id}": {
       "get": {
         "description": "Searches recipes",
         "produces": [
@@ -78,9 +78,7 @@
             "description": "Recipe not found"
           }
         }
-      }
-    },
-    "/recipes/{id}": {
+      },
       "put": {
         "description": "Updates a recipe",
         "consumes": [
@@ -129,6 +127,81 @@
           },
           "404": {
             "description": "Recipe not found"
+          }
+        }
+      }
+    },
+    "/refresh": {
+      "post": {
+        "description": "used for refresh token",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "refreshToken",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sends refreshed token with extra 10 minutes"
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "description": "used for signin",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "Signin",
+        "parameters": [
+          {
+            "name": "username"
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sends token"
+          }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "description": "used for signup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "Signup",
+        "parameters": [
+          {
+            "name": "username"
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "user created"
           }
         }
       }

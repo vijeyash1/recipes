@@ -65,7 +65,9 @@ func init() {
 	}
 	collection := client.Database(dbName).Collection(collName)
 	recipesHandler = handlers.NewRecipesHandler(collection, ctx, redisClient)
-	authHandler = &handlers.AuthHandler{}
+	collectionUsers := client.Database(dbName).Collection("users")
+	authHandler = handlers.NewAuthHandler(collectionUsers, ctx)
+
 	log.Println("Connected to MongoDB")
 }
 
@@ -76,6 +78,7 @@ func main() {
 	router.GET("/recipes", recipesHandler.ListRecipesHandler)
 	router.POST("/signin", authHandler.SignInHandler)
 	router.POST("/refresh", authHandler.RefreshHandler)
+	router.POST("/signup", authHandler.SignupHandler)
 
 	authorized := router.Group("/")
 	authorized.Use(authHandler.AuthMiddleware())

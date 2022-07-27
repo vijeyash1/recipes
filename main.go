@@ -20,18 +20,28 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/joho/godotenv"
 	"github.com/vijeyash1/recipes/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var authHandler *handlers.AuthHandler
 var recipesHandler *handlers.RecipesHandler
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	mongoUrl := os.Getenv("MONGO_URI")
+	dbName := os.Getenv("Db_Name")
+	collName := os.Getenv("Collection_Name")
 	ctx := context.Background()
 	redisOptions := &redis.Options{
 		Addr:     "localhost:6379",
@@ -44,7 +54,7 @@ func init() {
 
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://vijeyash:vijeyash1V@cluster0.refiu.mongodb.net/?retryWrites=true&w=majority").
+		ApplyURI(mongoUrl).
 		SetServerAPIOptions(serverAPIOptions)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
@@ -53,18 +63,28 @@ func init() {
 	if err = client.Ping(context.TODO(), nil); err != nil {
 		log.Fatal(err)
 	}
-	collection := client.Database("recipes").Collection("recipes")
+	collection := client.Database(dbName).Collection(collName)
 	recipesHandler = handlers.NewRecipesHandler(collection, ctx, redisClient)
+	authHandler = &handlers.AuthHandler{}
 	log.Println("Connected to MongoDB")
 }
+
 func main() {
+
 	router := gin.Default()
 	router.Use(cors.Default())
-	router.POST("/recipes", recipesHandler.NewRecipeHandler)
 	router.GET("/recipes", recipesHandler.ListRecipesHandler)
-	router.PUT("/recipes/:id", recipesHandler.UpdateRecipeHandler)
-	router.DELETE("/recipes/:id", recipesHandler.DeleteRecipeHandler)
-	router.GET("/recipes/search", recipesHandler.GetOneHandler)
+	router.POST("/signin", authHandler.SignInHandler)
+	router.POST("/refresh", authHandler.RefreshHandler)
+
+	authorized := router.Group("/")
+	authorized.Use(authHandler.AuthMiddleware())
+	authorized.POST("/recipes", recipesHandler.NewRecipeHandler)
+
+	authorized.PUT("/recipes/:id", recipesHandler.UpdateRecipeHandler)
+	authorized.DELETE("/recipes/:id", recipesHandler.DeleteRecipeHandler)
+	authorized.GET("/recipes/search", recipesHandler.GetOneHandler)
+
 	println("server starts at port 9000")
 	router.Run(":9000") // listen and serve on
 }

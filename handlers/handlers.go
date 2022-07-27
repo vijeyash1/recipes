@@ -38,6 +38,7 @@ func NewRecipesHandler(collection *mongo.Collection, ctx context.Context, redis 
 //   400:
 //     description: invalid request
 func (app *RecipesHandler) NewRecipeHandler(c *gin.Context) {
+
 	recipe := &models.Recipe{}
 	if err := c.ShouldBindJSON(recipe); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -170,6 +171,8 @@ func (app *RecipesHandler) DeleteRecipeHandler(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "recipe not found"})
 		return
 	}
+	log.Println("removing data from redis")
+	app.redisClient.Del(app.ctx, "recipes")
 	c.JSON(http.StatusOK, gin.H{"message": "recipe deleted"})
 }
 

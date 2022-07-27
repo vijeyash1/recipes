@@ -61,3 +61,19 @@ Host: redis
 Port: 6379
 database name : local
  add redis database
+
+
+ to create a 16 digit secret key:
+
+ openssl rand -base64 16
+
+ simple api keys can be hacked  by man in the middle attack
+ https://snyk.io/learn/man-in-the-middle-attack/
+
+
+ jwt implementation:
+
+ go get github.com/dgrijalva/jwt-go
+
+
+ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpamV5YXNoIiwiZXhwIjoxNjU4OTIxODAyfQ.lV3uKrT_Qi5ZiuMZQH5GfhdS3ArGp3v4nXJt2vzVTY0",
